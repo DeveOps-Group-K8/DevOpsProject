@@ -23,7 +23,7 @@ def create_app():
         if 'user_id' not in session:
             print("User is not logged in!")
     # Set app configurations
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost/users')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost/number_db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key')
     app.config['SESSION_COOKIE_SECURE'] = True  # Only sends cookies over HTTPS
