@@ -2,27 +2,31 @@ name: Flask CI/CD
 
 on:
   push:
-    branches: [ Flask_App ]
+    branches: [Flask_App]
   pull_request:
-    branches: [ Flask_App ]
+    branches: [Flask_App]
 
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: ⬇️ Checkout code
+      uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: 🐍 Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.13'
 
-    - name: Install dependencies
+    - name: 📦 Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m venv venv  # Create a virtual environment
+        source venv/bin/activate  # Activate the virtual environment
+        pip install -r requirements.txt  # Install dependencies
 
-    - name: Run tests
+    - name: ✅ Run tests
       run: |
-        pytest
+        source venv/bin/activate  # Ensure the virtual environment is activated
+        pytest  # Run your tests
