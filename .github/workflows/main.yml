@@ -10,23 +10,31 @@ jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: ⬇️ Checkout code
-      uses: actions/checkout@v3
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: users
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 9257postgres
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
-    - name: 🐍 Set up Python
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.13'
-
-    - name: 📦 Install dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m venv venv  # Create a virtual environment
-        source venv/bin/activate  # Activate the virtual environment
-        pip install -r requirements.txt  # Install dependencies
-
-    - name: ✅ Run tests
+        pip install -r requirements.txt
+    - name: Run tests
       run: |
-        source venv/bin/activate  # Ensure the virtual environment is activated
-        pytest  # Run your tests
+        pytest
