@@ -2,27 +2,39 @@ name: Flask CI/CD
 
 on:
   push:
-    branches: [ Flask_App ]
+    branches: [Flask_App]
   pull_request:
-    branches: [ Flask_App ]
+    branches: [Flask_App]
 
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: users
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 9257postgres
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
     - uses: actions/checkout@v3
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.13'
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
     - name: Run tests
       run: |
         pytest
