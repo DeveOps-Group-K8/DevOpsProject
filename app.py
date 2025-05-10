@@ -1,0 +1,61 @@
+import os
+import random
+from flask import Flask, render_template, redirect, url_for, request, flash, session, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
+from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
+from models import User, db  # Import the User model and db from the models module
+
+# Initialize Flask App and other components
+bcrypt = Bcrypt()
+login_manager = LoginManager()
+migrate = Migrate()
+
+
+              
+# Create App Factory Function
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object('config.Config')  # Load configuration from config.py@app.before_request
+    def check_session():
+        if 'user_id' not in session:
+            print("User is not logged in!")
+    # Set app configurations
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost/users')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key')
+    app.config['SESSION_COOKIE_SECURE'] = True  # Only sends cookies over HTTPS
+    app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevents JavaScript access to cookies
+    app.config['DEBUG'] = os.getenv('FLASK_DEBUG', False)
+
+    # Initialize extensions
+    db.init_app(app)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+    migrate.init_app(app, db)
+
+    # Import routes after app is initialized to avoid circular imports
+    import routes # Replace with the actual routes you need
+    app.register_blueprint(routes.main)  # Register the main blueprint
+   # app.register_blueprint(routes.auth)  # Register the auth blueprint
+
+    return app
+
+
+# User Loader for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+# Run the application
+if __name__ == "__main__":
+    app = create_app()  # Use the app factory
+    # Only run this in development, not in production.
+    if app.config['DEBUG']:
+        with app.app_context():
+            db.create_all()  # Create all tables (only in development)
+
+    app.run(debug=True)
