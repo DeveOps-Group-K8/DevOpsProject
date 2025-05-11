@@ -2,17 +2,15 @@ name: Flask CI/CD
 
 on:
   push:
-    branches: [Flask_App]
-  pull_request:
-    branches: [Flask_App]
+    branches: [ Flask_App ]
 
 jobs:
-  build-test-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:13  # Use stable version (no postgres:17 yet)
+        image: postgres:17
         ports:
           - 5432:5432
         env:
@@ -60,3 +58,28 @@ jobs:
       env:
         DATABASE_URL: postgresql://postgres:9257postgres@localhost:5432/number_db
       run: pytest
+
+    - name: Deploy to AWS EC2
+      if: success()
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "."
+        target: "/home/ec2-user/myapp"
+
+    - name: SSH into EC2 and restart app
+      if: success()
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /home/ec2-user/myapp
+          source venv/bin/activate
+          pip install -r requirements.txt
+          flask db upgrade
+          pkill -f "flask run" || true
+          nohup flask run --host=0.0.0.0 --port=5000 &
