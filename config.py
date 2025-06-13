@@ -12,7 +12,7 @@ class Config:
 
     # Database URI configuration
     # Fetch the URI from environment variables or fallback to a default value for local development
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost:5432/users')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost:5432/number_db')
 
     # Disable SQLAlchemy modification tracking to save memory
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -27,3 +27,5 @@ class Config:
     # Set up logging to capture production-level logs
     LOG_TO_STDOUT = os.getenv('LOG_TO_STDOUT')  # Capture logs and direct them to STDOUT for cloud services
     LOG_LEVEL = 'INFO'  # Or 'ERROR' based on your needs
+
+    
