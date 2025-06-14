@@ -50,8 +50,13 @@ def login():
         if user and user.check_password(password):
             # Log the user in using Flask-Login
             login_user(user)  # This will manage the session automatically
+            print(f"User {user.username} logged in")
             flash("Login successful!", "success")
-            return redirect(url_for('main.dashboard'))  # Redirect to the dashboard
+            flash("Login successful!", "success")
+            # Redirect to the next page or dashboard
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('main.dashboard'))
+
         else:
             flash("Invalid credentials! Try again.", "danger")
     
@@ -61,6 +66,11 @@ def login():
 @main.route('/dashboard')
 @login_required
 def dashboard():
+    print("Authenticated?", current_user.is_authenticated)
+    print("Username:", current_user.username)
+    if not current_user.is_authenticated:
+        flash("You need to log in first!", "warning")
+        return redirect(url_for('main.login'))
     return render_template('dashboard.html', username=current_user.username)
 
 @main.route('/guess', methods=['POST'])
