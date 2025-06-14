@@ -34,19 +34,7 @@ h1 {
     text-align: center;
 }
 
-.section{
-    display: flex;
-    justify-content: space-between; /* Spacing between columns */
-    gap: 10px; /* Optional: Adds space between columns */
-    width: 900px;
-    height: 400px;
-    margin: 5px;
-    padding: 10px;
-    background-color: lightskyblue;
-    margin: auto;
-    text-align: center;
-
-}
+ 
 
 .box2 {
     background: white;

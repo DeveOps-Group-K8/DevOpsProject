@@ -1,5 +1,6 @@
 import os
 import random
+import secrets
 from flask import Flask, render_template, redirect, url_for, request, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
@@ -13,22 +14,28 @@ bcrypt = Bcrypt()
 login_manager = LoginManager()
 migrate = Migrate()
 
-
               
 # Create App Factory Function
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')  # Load configuration from config.py@app.before_request
+    @app.before_request
+
     def check_session():
         if 'user_id' not in session:
             print("User is not logged in!")
     # Set app configurations
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost/number_db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key')
-    app.config['SESSION_COOKIE_SECURE'] = True  # Only sends cookies over HTTPS
+    SECRET_KEY = os.getenv('SECRET_KEY', secrets.token_hex(32))
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', SECRET_KEY)
+    
+    app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'
+
     app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevents JavaScript access to cookies
-    app.config['DEBUG'] = os.getenv('FLASK_DEBUG', False)
+     
+    app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'False').lower() in ['true', '1', 'yes']
+
 
     # Initialize extensions
     db.init_app(app)
