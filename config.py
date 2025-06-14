@@ -28,4 +28,9 @@ class Config:
     LOG_TO_STDOUT = os.getenv('LOG_TO_STDOUT')  # Capture logs and direct them to STDOUT for cloud services
     LOG_LEVEL = 'INFO'  # Or 'ERROR' based on your needs
 
+    # Production database URI
+        # Use the production database URI if available
+    SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DATABASE_URL')
+
+
     
