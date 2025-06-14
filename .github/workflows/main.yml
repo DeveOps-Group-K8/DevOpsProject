@@ -64,20 +64,21 @@ jobs:
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
+        username: ubuntu # or ec2-user depending on your setup
+        port: 22
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "."  # Consider packaging instead of sending all files
-        target: "/home/ec2-user/myapp"
+        target: "/home/ubuntu/myapp"
 
     - name: SSH into EC2 and restart app
       if: success()
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
+        username: ubuntu # or ec2-user depending on your setup
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          cd /home/ec2-user/myapp
+          cd /home/ubuntu/myapp
           source venv/bin/activate || python3 -m venv venv && source venv/bin/activate
           pip install -r requirements.txt
           export FLASK_APP=app
