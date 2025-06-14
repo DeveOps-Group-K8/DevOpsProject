@@ -14,7 +14,6 @@ from routes import main, init_app  # Import the main blueprint from routes
 # Initialize Flask App and other components
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-db = SQLAlchemy()
 login_manager.login_view = 'main.login'
 login_manager.login_message_category = 'info'
 migrate = Migrate()
