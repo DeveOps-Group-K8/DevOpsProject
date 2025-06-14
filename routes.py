@@ -64,7 +64,7 @@ def login():
 
 # Dashboard Page
 @main.route('/dashboard')
-@login_required
+#@login_required
 def dashboard():
     print("Authenticated?", current_user.is_authenticated)
     print("Username:", current_user.username)
