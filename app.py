@@ -47,7 +47,7 @@ def create_app():
     import routes # Replace with the actual routes you need
     
     app.register_blueprint(routes.main)  # Register the main blueprint
-    init_app = routes.init_app  # Initialize the app with routes
+    init_app = routes.init_app(app)  # Initialize the app with routes
    # app.register_blueprint(routes.auth)  # Register the auth blueprint
 
     return app
