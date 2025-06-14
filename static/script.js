@@ -57,3 +57,34 @@
         }
     };
  
+    fetch('/dashboard', {
+        method: 'GET',
+        credentials: 'include', // Include cookies for session management
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const leaderboard = document.querySelector('.leaderboard');
+        leaderboard.innerHTML = ''; // Clear existing leaderboard
+        data.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.username}: ${entry.score}`;
+        if (entry.rank === 1) {
+            li.innerHTML = `🥇 ${li.textContent}`;
+        } else if (entry.rank === 2) {
+            li.innerHTML = `🥈 ${li.textContent}`;
+        } else if (entry.rank === 3) {
+            li.innerHTML = `🥉 ${li.textContent}`;
+        }
+        leaderboard.appendChild(li);
+        });
+    })
+    .catch(error => console.error('Error fetching leaderboard:', error));
+
