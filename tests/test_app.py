@@ -19,7 +19,7 @@ from models import User  # Adjust the import to your project structure
 def test_app():
     # Set up Flask app for testing
     app = create_app()
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:9257postgres@localhost/test_db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:9257postgres@localhost:5432/test_db'
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'test-secret-key'
