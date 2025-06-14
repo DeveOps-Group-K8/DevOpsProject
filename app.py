@@ -27,8 +27,8 @@ def create_app():
     # Set app configurations
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost/number_db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    SECRET_KEY = os.getenv('SECRET_KEY', secrets.token_hex(32))
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', SECRET_KEY)
+    SECRET_KEY = os.getenv('SECRET_KEY', '9fb5385369890ee6e709cae9d14306fff716fd81d5338058392c322e99204a3a')
+    app.config['SECRET_KEY'] = SECRET_KEY
     
     app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'
 
