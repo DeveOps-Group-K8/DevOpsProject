@@ -8,6 +8,8 @@ from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import User, db  # Import the User model and db from the models module
+import routes # Replace with the actual routes you need
+from routes import main, init_app  # Import the main blueprint from routes
 
 # Initialize Flask App and other components
 bcrypt = Bcrypt()
@@ -44,10 +46,9 @@ def create_app():
     migrate.init_app(app, db)
 
     # Import routes after app is initialized to avoid circular imports
-    import routes # Replace with the actual routes you need
     
-    app.register_blueprint(routes.main)  # Register the main blueprint
-    init_app = routes.init_app(app)  # Initialize the app with routes
+    app.register_blueprint(main)  # Register the main blueprint
+    init_app =init_app(app)  # Initialize the app with routes
    # app.register_blueprint(routes.auth)  # Register the auth blueprint
 
     return app
