@@ -14,6 +14,8 @@ from routes import main, init_app  # Import the main blueprint from routes
 # Initialize Flask App and other components
 bcrypt = Bcrypt()
 login_manager = LoginManager()
+login_manager.login_view = 'main.login'
+login_manager.login_message_category = 'info'
 migrate = Migrate()
 
               
@@ -21,7 +23,6 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')  # Load configuration from config.py@app.before_request
-    @app.before_request
 
     def check_session():
         if 'user_id' not in session:
@@ -47,8 +48,8 @@ def create_app():
 
     # Import routes after app is initialized to avoid circular imports
     
-    app.register_blueprint(routes.main)  # Register the main blueprint
-    init_app =routes.init_app(app)  # Initialize the app with routes
+    app.register_blueprint(main)  # Register the main blueprint
+    init_app(app)  # Initialize the app with routes
 
    # app.register_blueprint(routes.auth)  # Register the auth blueprint
 
