@@ -10,7 +10,7 @@ class Config:
     # Use PROD_DATABASE_URL if set, else DATABASE_URL, else local default with port
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'PROD_DATABASE_URL',
-        os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost:5432/numberdb')
+        os.getenv('DATABASE_URL', 'postgresql://postgres:9257postgres@localhost:5432/number_db')
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
