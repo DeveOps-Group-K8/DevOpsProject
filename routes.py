@@ -64,9 +64,9 @@ def login():
 
 # Dashboard Page
 @main.route('/dashboard')
-#@login_required
+@login_required
 def dashboard():
-    print("Authenticated?", current_user.is_authenticated)
+    # Ensure the user is logged in
     print("Username:", current_user.username)
     if not current_user.is_authenticated:
         flash("You need to log in first!", "warning")
